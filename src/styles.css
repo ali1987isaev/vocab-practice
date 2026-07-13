@@ -15,7 +15,7 @@
 * { box-sizing: border-box; }
 html { background: #eef1ef; }
 body { margin: 0; min-width: 320px; min-height: 100vh; background: radial-gradient(circle at top, #fff 0, #eef1ef 52%); }
-button, input, textarea { font: inherit; }
+button, input, select { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: .5; }
 
@@ -40,8 +40,6 @@ button:disabled { cursor: not-allowed; opacity: .5; }
 .light-button { background: white; color: var(--ink); }
 .secondary-button { background: #e7ece9; color: var(--ink); }
 .danger-button { background: #ffe5e2; color: #a33528; }
-.full-width { width: 100%; }
-
 .section-heading { display: flex; align-items: end; justify-content: space-between; margin-top: 10px; }
 .section-heading h2 { font-size: 1.45rem; }
 .text-button { border: 0; background: none; color: var(--accent-dark); font-weight: 800; }
@@ -102,7 +100,17 @@ blockquote { margin: 18px 0 0; padding: 16px; border-left: 4px solid var(--accen
 .settings-card { padding: 22px; border-radius: 22px; border: 1px solid var(--line); background: white; }
 .settings-card h2 { font-size: 1.35rem; }
 .settings-card p { color: var(--muted); line-height: 1.55; }
-.button-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.speech-warning { padding: 12px 14px; border-radius: 13px; background: #fff3dc; color: #795416 !important; }
+.speech-controls { display: grid; gap: 19px; min-width: 0; margin: 22px 0 0; padding: 0; border: 0; }
+.speech-controls label { display: grid; gap: 8px; color: #3c494b; font-size: .78rem; font-weight: 800; }
+.speech-controls select { width: 100%; min-height: 48px; padding: 0 12px; border: 1px solid var(--line); border-radius: 14px; outline: 0; background: white; color: var(--ink); }
+.speech-controls select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(46,154,146,.12); }
+.speech-controls input[type='range'] { width: 100%; min-height: 36px; margin: 0; accent-color: var(--accent-dark); }
+.speech-controls small { color: var(--muted); font-size: .72rem; font-weight: 500; line-height: 1.45; }
+.speech-controls:disabled { opacity: .55; }
+.control-heading { display: flex; justify-content: space-between; gap: 12px; }
+.control-heading output { color: var(--accent-dark); font-variant-numeric: tabular-nums; }
+.settings-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .warning-card { border-color: #f1c9c4; }
 
 .bottom-nav { position: fixed; z-index: 20; left: 50%; bottom: 0; transform: translateX(-50%); width: min(760px, 100%); display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); border-top: 1px solid rgba(208,216,213,.9); background: rgba(250,252,251,.94); backdrop-filter: blur(18px); }
@@ -110,16 +118,6 @@ blockquote { margin: 18px 0 0; padding: 16px; border-left: 4px solid var(--accen
 .bottom-nav button span { font-size: 1.18rem; }
 .bottom-nav button small { font-size: .67rem; font-weight: 750; }
 .bottom-nav button.active { color: var(--accent-dark); }
-
-.toast { position: fixed; z-index: 50; top: calc(15px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); border: 0; border-radius: 99px; padding: 11px 16px; color: white; background: var(--ink); box-shadow: 0 12px 30px rgba(0,0,0,.2); }
-.modal-backdrop { position: fixed; z-index: 100; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding-top: 35px; background: rgba(7,14,16,.55); backdrop-filter: blur(6px); }
-.word-form { width: min(760px, 100%); max-height: 94vh; overflow: auto; padding: 24px 20px calc(30px + env(safe-area-inset-bottom)); border-radius: 30px 30px 0 0; background: #f6f8f7; box-shadow: 0 -20px 60px rgba(0,0,0,.25); }
-.form-heading { display: flex; justify-content: space-between; align-items: start; margin-bottom: 18px; }
-.form-heading h2 { margin: 3px 0; font-size: 1.7rem; letter-spacing: -.04em; }
-.word-form label { display: grid; gap: 7px; margin: 13px 0; color: #3c494b; font-size: .76rem; font-weight: 800; }
-.word-form input, .word-form textarea { width: 100%; border: 1px solid var(--line); border-radius: 14px; padding: 13px 14px; outline: 0; background: white; color: var(--ink); font-weight: 500; }
-.word-form textarea { min-height: 88px; resize: vertical; }
-.word-form input:focus, .word-form textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(46,154,146,.12); }
 
 @media (min-width: 680px) {
   .app-shell { padding-left: 30px; padding-right: 30px; }

@@ -1,9 +1,8 @@
-import type { VocabularyCard } from './types'
+import type { VocabularyCard } from '../types'
+import { createCard } from './helpers'
 
-const today = new Date().toISOString()
-
-export const starterCards: VocabularyCard[] = [
-  {
+export const phrasalVerbs: VocabularyCard[] = [
+  createCard({
     id: 'figure-out',
     term: 'figure out',
     translation: 'разобраться; понять; выяснить',
@@ -17,14 +16,12 @@ export const starterCards: VocabularyCard[] = [
     context: "Yesterday I was trying to figure out why my computer wasn't working.",
     category: 'Phrasal verbs',
     tags: ['work', 'problem-solving'],
-    status: 'new',
-    createdAt: today,
     reviewCount: 0,
     correctCount: 0,
     incorrectCount: 0,
     intervalDays: 0,
-  },
-  {
+  }),
+  createCard({
     id: 'put-up-with',
     term: 'put up with',
     translation: 'терпеть; мириться с чем-либо',
@@ -38,14 +35,12 @@ export const starterCards: VocabularyCard[] = [
     context: "Honestly, I couldn't put up with the problem anymore.",
     category: 'Phrasal verbs',
     tags: ['feelings', 'daily life'],
-    status: 'new',
-    createdAt: today,
     reviewCount: 0,
     correctCount: 0,
     incorrectCount: 0,
     intervalDays: 0,
-  },
-  {
+  }),
+  createCard({
     id: 'push-back',
     term: 'push back',
     translation: 'перенести на более позднее время; отложить',
@@ -59,14 +54,12 @@ export const starterCards: VocabularyCard[] = [
     context: 'Yesterday I had to push back a meeting because I needed more time.',
     category: 'Phrasal verbs',
     tags: ['work', 'planning'],
-    status: 'new',
-    createdAt: today,
     reviewCount: 0,
     correctCount: 0,
     incorrectCount: 0,
     intervalDays: 0,
-  },
-  {
+  }),
+  createCard({
     id: 'go-along-with',
     term: 'go along with',
     translation: 'согласиться; поддержать предложение или план',
@@ -80,14 +73,12 @@ export const starterCards: VocabularyCard[] = [
     context: 'My friend suggested another solution, so I went along with it.',
     category: 'Phrasal verbs',
     tags: ['decisions', 'work'],
-    status: 'new',
-    createdAt: today,
     reviewCount: 0,
     correctCount: 0,
     incorrectCount: 0,
     intervalDays: 0,
-  },
-  {
+  }),
+  createCard({
     id: 'turn-down',
     term: 'turn down',
     translation: 'отказаться; отклонить',
@@ -101,11 +92,9 @@ export const starterCards: VocabularyCard[] = [
     context: 'In the end, I turned down another meeting because I needed more time.',
     category: 'Phrasal verbs',
     tags: ['decisions', 'work'],
-    status: 'new',
-    createdAt: today,
     reviewCount: 0,
     correctCount: 0,
     incorrectCount: 0,
     intervalDays: 0,
-  },
+  }),
 ]

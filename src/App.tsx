@@ -1,38 +1,33 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { applyReview, isDue } from './review'
-import { speak } from './speech'
-import { exportCards, importCards, loadCards, saveCards } from './storage'
+import {
+  DEFAULT_SPEECH_SETTINGS,
+  isSpeechSupported,
+  loadSpeechSettings,
+  saveSpeechSettings,
+  speak,
+} from './speech'
+import { loadCards, resetProgress, saveProgress } from './storage'
 import type { ReviewRating, VocabularyCard } from './types'
 
 type View = 'today' | 'practice' | 'words' | 'settings'
 
-type CardDraft = Pick<VocabularyCard, 'term' | 'translation' | 'definition' | 'pronunciation' | 'examples' | 'context' | 'notes' | 'category'>
+const LANGUAGE_OPTIONS = [
+  { value: 'en-GB', label: 'English (UK)' },
+  { value: 'en-US', label: 'English (US)' },
+  { value: 'en-IE', label: 'English (Ireland)' },
+  { value: 'en-AU', label: 'English (Australia)' },
+  { value: 'en-CA', label: 'English (Canada)' },
+]
 
-const emptyDraft: CardDraft = {
-  term: '',
-  translation: '',
-  definition: '',
-  pronunciation: '',
-  examples: [''],
-  context: '',
-  notes: '',
-  category: 'Phrasal verbs',
-}
+function getVoiceLabel(voice: SpeechSynthesisVoice): string {
+  const language = LANGUAGE_OPTIONS.find(
+    (option) => option.value.toLowerCase() === voice.lang.toLowerCase(),
+  )?.label ?? voice.lang
+  const service = voice.localService ? 'local' : 'remote'
+  const defaultLabel = voice.default ? ' — default' : ''
 
-function createCard(draft: CardDraft): VocabularyCard {
-  const id = `${draft.term.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}-${Date.now()}`
-
-  return {
-    ...draft,
-    id,
-    examples: draft.examples.map((example) => example.trim()).filter(Boolean),
-    status: 'new',
-    createdAt: new Date().toISOString(),
-    reviewCount: 0,
-    correctCount: 0,
-    incorrectCount: 0,
-    intervalDays: 0,
-  }
+  return `${voice.name} — ${language} — ${voice.lang} — ${service}${defaultLabel}`
 }
 
 function IconButton({ label, children, onClick }: { label: string; children: React.ReactNode; onClick: () => void }) {
@@ -49,14 +44,28 @@ export default function App() {
   const [sessionIds, setSessionIds] = useState<string[]>([])
   const [sessionIndex, setSessionIndex] = useState(0)
   const [revealed, setRevealed] = useState(false)
-  const [showForm, setShowForm] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [draft, setDraft] = useState<CardDraft>(emptyDraft)
   const [query, setQuery] = useState('')
-  const [message, setMessage] = useState('')
-  const importInput = useRef<HTMLInputElement>(null)
+  const [speechSettings, setSpeechSettings] = useState(loadSpeechSettings)
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
+  const speechSupported = isSpeechSupported()
 
-  useEffect(() => saveCards(cards), [cards])
+  useEffect(() => saveProgress(cards), [cards])
+  useEffect(() => saveSpeechSettings(speechSettings), [speechSettings])
+
+  useEffect(() => {
+    if (!speechSupported) return
+
+    const synthesis = window.speechSynthesis
+    const loadVoices = () => {
+      setVoices(
+        synthesis.getVoices().filter((voice) => voice.lang.toLowerCase().startsWith('en')),
+      )
+    }
+
+    loadVoices()
+    synthesis.addEventListener('voiceschanged', loadVoices)
+    return () => synthesis.removeEventListener('voiceschanged', loadVoices)
+  }, [speechSupported])
 
   const dueCards = useMemo(() => cards.filter(isDue), [cards])
   const currentCard = cards.find((card) => card.id === sessionIds[sessionIndex])
@@ -72,6 +81,25 @@ export default function App() {
         .includes(normalized),
     )
   }, [cards, query])
+
+  const localeVoices = useMemo(
+    () => voices.filter((voice) => voice.lang.toLowerCase() === speechSettings.lang.toLowerCase()),
+    [speechSettings.lang, voices],
+  )
+  const otherEnglishVoices = useMemo(
+    () => voices.filter((voice) => voice.lang.toLowerCase() !== speechSettings.lang.toLowerCase()),
+    [speechSettings.lang, voices],
+  )
+  const selectedVoiceIsUnavailable = Boolean(
+    speechSettings.voiceURI && !voices.some((voice) => voice.voiceURI === speechSettings.voiceURI),
+  )
+  const selectedLanguageLabel = LANGUAGE_OPTIONS.find(
+    (language) => language.value === speechSettings.lang,
+  )?.label ?? speechSettings.lang
+
+  function speakText(text: string) {
+    speak(text, speechSettings, voices)
+  }
 
   function startPractice() {
     const due = dueCards.length ? dueCards : cards.filter((card) => card.status !== 'paused')
@@ -93,65 +121,6 @@ export default function App() {
     setSessionIndex((current) => current + 1)
   }
 
-  function openAddForm() {
-    setEditingId(null)
-    setDraft(emptyDraft)
-    setShowForm(true)
-  }
-
-  function openEditForm(card: VocabularyCard) {
-    setEditingId(card.id)
-    setDraft({
-      term: card.term,
-      translation: card.translation,
-      definition: card.definition,
-      pronunciation: card.pronunciation ?? '',
-      examples: card.examples.length ? card.examples : [''],
-      context: card.context ?? '',
-      notes: card.notes ?? '',
-      category: card.category ?? '',
-    })
-    setShowForm(true)
-  }
-
-  function saveDraft(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (!draft.term.trim() || !draft.translation.trim()) return
-
-    if (editingId) {
-      setCards((current) =>
-        current.map((card) =>
-          card.id === editingId
-            ? { ...card, ...draft, examples: draft.examples.map((example) => example.trim()).filter(Boolean) }
-            : card,
-        ),
-      )
-    } else {
-      setCards((current) => [createCard(draft), ...current])
-    }
-
-    setShowForm(false)
-    setEditingId(null)
-    setDraft(emptyDraft)
-    setMessage(editingId ? 'Card updated.' : 'New card added.')
-  }
-
-  function removeCard(id: string) {
-    if (!window.confirm('Delete this card?')) return
-    setCards((current) => current.filter((card) => card.id !== id))
-  }
-
-  async function handleImport(file: File | undefined) {
-    if (!file) return
-    try {
-      const imported = await importCards(file)
-      setCards(imported)
-      setMessage(`Imported ${imported.length} cards.`)
-    } catch {
-      setMessage('Could not import this file.')
-    }
-  }
-
   return (
     <div className="app-shell">
       <header className="topbar">
@@ -159,16 +128,9 @@ export default function App() {
           <p className="eyebrow">VOCAB PRACTICE</p>
           <h1>{view === 'today' ? 'Today' : view === 'practice' ? 'Practice' : view === 'words' ? 'Learning words' : 'Settings'}</h1>
         </div>
-        {view !== 'practice' && <IconButton label="Add a new word" onClick={openAddForm}>＋</IconButton>}
       </header>
 
       <main>
-        {message && (
-          <button className="toast" type="button" onClick={() => setMessage('')}>
-            {message}
-          </button>
-        )}
-
         {view === 'today' && (
           <section className="stack">
             <article className="hero-card">
@@ -196,14 +158,13 @@ export default function App() {
 
             <div className="preview-list">
               {cards.slice(0, 4).map((card) => (
-                <button className="preview-card" type="button" key={card.id} onClick={() => openEditForm(card)}>
+                <article className="preview-card" key={card.id}>
                   <span className={`status-dot status-${card.status}`} />
                   <span>
                     <strong>{card.term}</strong>
                     <small>{card.translation}</small>
                   </span>
-                  <span aria-hidden="true">›</span>
-                </button>
+                </article>
               ))}
             </div>
 
@@ -212,7 +173,7 @@ export default function App() {
               <p>
                 Yesterday I had to <mark>push back</mark> a meeting because I was trying to <mark>figure out</mark> why my computer wasn’t working. I couldn’t <mark>put up with</mark> it anymore, so I <mark>went along with</mark> another idea.
               </p>
-              <IconButton label="Listen to the context" onClick={() => speak("Yesterday I had to push back a meeting because I was trying to figure out why my computer wasn't working. I couldn't put up with it anymore, so I went along with another idea.")}>🔊</IconButton>
+              <IconButton label="Listen to the context" onClick={() => speakText("Yesterday I had to push back a meeting because I was trying to figure out why my computer wasn't working. I couldn't put up with it anymore, so I went along with another idea.")}>🔊</IconButton>
             </article>
           </section>
         )}
@@ -239,7 +200,7 @@ export default function App() {
                   <p className="eyebrow">{currentCard.category ?? 'VOCABULARY'}</p>
                   <div className="word-heading">
                     <h2>{currentCard.term}</h2>
-                    <IconButton label="Listen to pronunciation" onClick={() => speak(currentCard.term)}>🔊</IconButton>
+                    <IconButton label="Listen to pronunciation" onClick={() => speakText(currentCard.term)}>🔊</IconButton>
                   </div>
                   {currentCard.pronunciation && <p className="pronunciation">{currentCard.pronunciation}</p>}
 
@@ -254,7 +215,7 @@ export default function App() {
                       <p className="definition">{currentCard.definition}</p>
                       <div className="examples">
                         {currentCard.examples.map((example) => (
-                          <button key={example} type="button" onClick={(event) => { event.stopPropagation(); speak(example) }}>
+                          <button key={example} type="button" onClick={(event) => { event.stopPropagation(); speakText(example) }}>
                             <span>{example}</span><span>🔊</span>
                           </button>
                         ))}
@@ -295,15 +256,14 @@ export default function App() {
             <div className="word-list">
               {filteredCards.map((card) => (
                 <article className="word-row" key={card.id}>
-                  <button className="word-main" type="button" onClick={() => openEditForm(card)}>
+                  <div className="word-main">
                     <span>
                       <strong>{card.term}</strong>
                       <small>{card.translation}</small>
                     </span>
                     <span className={`status-pill status-${card.status}`}>{card.status}</span>
-                  </button>
-                  <IconButton label={`Listen to ${card.term}`} onClick={() => speak(card.term)}>🔊</IconButton>
-                  <IconButton label={`Delete ${card.term}`} onClick={() => removeCard(card.id)}>⋯</IconButton>
+                  </div>
+                  <IconButton label={`Listen to ${card.term}`} onClick={() => speakText(card.term)}>🔊</IconButton>
                 </article>
               ))}
             </div>
@@ -313,28 +273,122 @@ export default function App() {
         {view === 'settings' && (
           <section className="stack">
             <article className="settings-card">
-              <h2>Backup</h2>
-              <p>Your progress is stored on this device. Export a JSON backup before clearing browser data or changing phones.</p>
-              <div className="button-row">
-                <button className="primary-button" type="button" onClick={() => exportCards(cards)}>Export JSON</button>
-                <button className="secondary-button" type="button" onClick={() => importInput.current?.click()}>Import JSON</button>
-                <input ref={importInput} type="file" accept="application/json" hidden onChange={(event) => handleImport(event.target.files?.[0])} />
-              </div>
-            </article>
+              <h2>Voice &amp; pronunciation</h2>
+              <p>Choose how the browser reads words, examples, and context sentences.</p>
 
-            <article className="settings-card">
-              <h2>Pronunciation</h2>
-              <p>The app uses the English voice installed on your phone through the browser Web Speech API.</p>
-              <button className="secondary-button" type="button" onClick={() => speak('Figure out. I finally figured out how to use this app.')}>Test voice</button>
+              {!speechSupported && (
+                <p className="speech-warning">Speech synthesis is not supported by this browser.</p>
+              )}
+
+              <fieldset className="speech-controls" disabled={!speechSupported}>
+                <label>
+                  <span>Voice</span>
+                  <select
+                    value={speechSettings.voiceURI}
+                    onChange={(event) => setSpeechSettings((current) => ({
+                      ...current,
+                      voiceURI: event.target.value,
+                    }))}
+                  >
+                    <option value="">Automatic — {selectedLanguageLabel}</option>
+                    {selectedVoiceIsUnavailable && (
+                      <option value={speechSettings.voiceURI}>Unavailable voice — automatic fallback</option>
+                    )}
+                    {localeVoices.length > 0 && (
+                      <optgroup label={`Selected accent — ${speechSettings.lang}`}>
+                        {localeVoices.map((voice) => (
+                          <option key={voice.voiceURI} value={voice.voiceURI}>{getVoiceLabel(voice)}</option>
+                        ))}
+                      </optgroup>
+                    )}
+                    {otherEnglishVoices.length > 0 && (
+                      <optgroup label="Other English voices">
+                        {otherEnglishVoices.map((voice) => (
+                          <option key={voice.voiceURI} value={voice.voiceURI}>{getVoiceLabel(voice)}</option>
+                        ))}
+                      </optgroup>
+                    )}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Accent / language</span>
+                  <select
+                    value={speechSettings.lang}
+                    onChange={(event) => setSpeechSettings((current) => ({
+                      ...current,
+                      lang: event.target.value,
+                      voiceURI: '',
+                    }))}
+                  >
+                    {LANGUAGE_OPTIONS.map((language) => (
+                      <option key={language.value} value={language.value}>
+                        {language.label} — {language.value}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span className="control-heading"><span>Speed</span><output>{speechSettings.rate.toFixed(2)}×</output></span>
+                  <input
+                    type="range"
+                    min={0.5}
+                    max={1.5}
+                    step={0.05}
+                    value={speechSettings.rate}
+                    onChange={(event) => setSpeechSettings((current) => ({
+                      ...current,
+                      rate: Number(event.target.value),
+                    }))}
+                  />
+                </label>
+
+                <label>
+                  <span className="control-heading"><span>Pitch / intonation</span><output>{speechSettings.pitch.toFixed(2)}</output></span>
+                  <input
+                    type="range"
+                    min={0.5}
+                    max={1.5}
+                    step={0.05}
+                    value={speechSettings.pitch}
+                    onChange={(event) => setSpeechSettings((current) => ({
+                      ...current,
+                      pitch: Number(event.target.value),
+                    }))}
+                  />
+                  <small>This adjusts voice pitch, not natural human emotional intonation.</small>
+                </label>
+
+                <label>
+                  <span className="control-heading"><span>Volume</span><output>{Math.round(speechSettings.volume * 100)}%</output></span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.05}
+                    value={speechSettings.volume}
+                    onChange={(event) => setSpeechSettings((current) => ({
+                      ...current,
+                      volume: Number(event.target.value),
+                    }))}
+                  />
+                </label>
+
+                <div className="settings-actions">
+                  <button className="primary-button" type="button" onClick={() => speakText('Suppose we try a different voice and speaking speed.')}>Test voice</button>
+                  <button className="secondary-button" type="button" onClick={() => setSpeechSettings({ ...DEFAULT_SPEECH_SETTINGS })}>Reset voice settings</button>
+                </div>
+              </fieldset>
             </article>
 
             <article className="settings-card warning-card">
               <h2>Reset progress</h2>
-              <p>This restores the original five starter cards.</p>
+              <p>This clears your local learning progress. The vocabulary in the source files is unchanged.</p>
               <button className="danger-button" type="button" onClick={() => {
-                localStorage.clear()
+                resetProgress()
                 window.location.reload()
-              }}>Reset application</button>
+              }}>Reset progress</button>
             </article>
           </section>
         )}
@@ -349,27 +403,6 @@ export default function App() {
         </nav>
       )}
 
-      {showForm && (
-        <div className="modal-backdrop" role="presentation" onMouseDown={() => setShowForm(false)}>
-          <form className="word-form" onSubmit={saveDraft} onMouseDown={(event) => event.stopPropagation()}>
-            <div className="form-heading">
-              <div><p className="eyebrow">VOCABULARY CARD</p><h2>{editingId ? 'Edit word' : 'Add a word'}</h2></div>
-              <button type="button" className="close-button" onClick={() => setShowForm(false)}>×</button>
-            </div>
-
-            <label>Phrase<input required value={draft.term} onChange={(event) => setDraft({ ...draft, term: event.target.value })} placeholder="figure out" /></label>
-            <label>Translation<input required value={draft.translation} onChange={(event) => setDraft({ ...draft, translation: event.target.value })} placeholder="разобраться; понять" /></label>
-            <label>Simple English definition<textarea value={draft.definition} onChange={(event) => setDraft({ ...draft, definition: event.target.value })} placeholder="To understand something or find the answer." /></label>
-            <label>Pronunciation<input value={draft.pronunciation} onChange={(event) => setDraft({ ...draft, pronunciation: event.target.value })} placeholder="/ˈfɪɡər aʊt/" /></label>
-            <label>Examples<textarea value={draft.examples.join('\n')} onChange={(event) => setDraft({ ...draft, examples: event.target.value.split('\n') })} placeholder={'One example per line\nCan you figure out what is wrong?'} /></label>
-            <label>Personal context<textarea value={draft.context} onChange={(event) => setDraft({ ...draft, context: event.target.value })} placeholder="Use the phrase in a sentence connected to your life." /></label>
-            <label>Notes<textarea value={draft.notes} onChange={(event) => setDraft({ ...draft, notes: event.target.value })} placeholder="Usage notes, grammar, common combinations..." /></label>
-            <label>Category<input value={draft.category} onChange={(event) => setDraft({ ...draft, category: event.target.value })} /></label>
-
-            <button className="primary-button full-width" type="submit">Save card</button>
-          </form>
-        </div>
-      )}
     </div>
   )
 }

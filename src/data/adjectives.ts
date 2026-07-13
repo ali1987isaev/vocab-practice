@@ -1,0 +1,62 @@
+import type { VocabularyCard } from '../types'
+import { createCard } from './helpers'
+
+export const adjectives: VocabularyCard[] = [
+  createCard({
+    id: 'calm-adjective',
+    term: 'calm',
+    translation: 'спокойный',
+    definition: 'Not nervous, angry, or excited.',
+    pronunciation: '/kɑːm/',
+    examples: [
+      'She stayed calm during the interview.',
+      'Try to remain calm.',
+      'He has a calm personality.',
+    ],
+    context: 'Staying calm helps you make better decisions.',
+    category: 'Adjectives',
+    tags: ['feelings', 'personality'],
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
+  createCard({
+    id: 'relevant',
+    term: 'relevant',
+    translation: 'относящийся к делу; релевантный',
+    definition: 'Closely connected with the subject being discussed.',
+    pronunciation: '/ˈreləvənt/',
+    examples: [
+      'Please provide relevant information.',
+      'His experience is relevant to the job.',
+      'That example is not relevant.',
+    ],
+    context: 'Only relevant information should be included in the report.',
+    category: 'Adjectives',
+    tags: ['work', 'communication'],
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
+  createCard({
+    id: 'related',
+    term: 'related',
+    translation: 'связанный; относящийся',
+    definition: 'Connected with or linked to something else.',
+    pronunciation: '/rɪˈleɪtɪd/',
+    examples: [
+      'The two issues are closely related.',
+      'This article is related to programming.',
+      'These topics are not related.',
+    ],
+    context: 'The problem is related to the latest software update.',
+    category: 'Adjectives',
+    tags: ['common', 'connections'],
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
+]

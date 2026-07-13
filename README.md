@@ -9,11 +9,11 @@ A mobile-first English vocabulary practice app for a small, active set of words 
 - Again / Hard / Good / Easy scheduling
 - English pronunciation using the browser Web Speech API
 - Context sentences and multiple examples
-- Add, edit, search, and delete cards
-- JSON backup and restore
+- Search and browse vocabulary
+- Source-managed vocabulary library
 - Offline-ready PWA shell
 - Automatic GitHub Pages deployment workflow
-- Five starter phrasal verbs from the initial concept
+- Five phrasal verbs from the initial concept
 
 ## Run locally
 
@@ -38,9 +38,9 @@ npm run build
 
 The Vite base path is set to `./`, so the build works for both user pages and repository pages.
 
-## Data storage
+## Vocabulary and progress
 
-Cards and progress are stored in browser `localStorage`. Use **Settings → Export JSON** to create backups, especially before moving to another phone or clearing browser data.
+Vocabulary is managed in the TypeScript files under `src/data`. Add or edit cards there, then rebuild the app. Learning progress is stored separately in browser `localStorage` and matched to vocabulary by card ID.
 
 ## Suggested next improvements
 
