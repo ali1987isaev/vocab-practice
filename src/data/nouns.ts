@@ -132,4 +132,25 @@ export const nouns: VocabularyCard[] = [
     incorrectCount: 0,
     intervalDays: 0,
   }),
+  createCard({
+    id: 'poverty',
+    term: 'poverty',
+    translation: 'бедность; нищета',
+    definition:
+      'The state of being extremely poor or having very little money.',
+    pronunciation: '/ˈpɒvəti/',
+    examples: [
+      'Millions of people live in poverty.',
+      'The charity works to reduce poverty.',
+      'He grew up in poverty but eventually became successful.',
+    ],
+    context: 'Many families struggle to survive because of extreme poverty.',
+    category: 'Nouns',
+    tags: ['life', 'society', 'economics'],
+    status: 'new',
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
 ];
