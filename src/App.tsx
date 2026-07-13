@@ -9,6 +9,7 @@ import {
 } from './speech'
 import { loadCards, resetProgress, saveProgress } from './storage'
 import type { ReviewRating, VocabularyCard } from './types'
+import { CardDetails } from './components/CardDetails'
 
 type View = 'today' | 'practice' | 'words' | 'settings'
 
@@ -212,17 +213,7 @@ export default function App() {
                   ) : (
                     <div className="answer-content">
                       <p className="translation">{currentCard.translation}</p>
-                      <p className="definition">{currentCard.definition}</p>
-                      <div className="examples">
-                        {currentCard.examples.map((example) => (
-                          <button key={example} type="button" onClick={(event) => { event.stopPropagation(); speakText(example) }}>
-                            <span>{example}</span><span>🔊</span>
-                          </button>
-                        ))}
-                      </div>
-                      {currentCard.context && (
-                        <blockquote>{currentCard.context}</blockquote>
-                      )}
+                      <CardDetails card={currentCard} onSpeak={speakText} />
                     </div>
                   )}
                 </article>

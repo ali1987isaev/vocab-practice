@@ -33,6 +33,16 @@ export const nouns: VocabularyCard[] = [
       'She made a great effort to improve.',
       'Your effort will eventually bring results.',
     ],
+    collocations: [
+      'make an effort',
+      'great effort',
+      'best effort',
+      'joint effort',
+    ],
+    register: ['spoken', 'written'],
+    commonMistakes: [
+      'Say "make an effort", not "do an effort".',
+    ],
     context:
       'Even a small daily effort can lead to significant progress over time.',
     category: 'Nouns',
@@ -54,6 +64,12 @@ export const nouns: VocabularyCard[] = [
       'There is growing concern about the problem.',
       'My main concern is the lack of time.',
       'She expressed concern about his health.',
+    ],
+    collocations: [
+      'express concern',
+      'raise concerns',
+      'major concern',
+      'growing concern',
     ],
     context:
       'One of my main concerns was whether the update would affect the live website.',
@@ -143,6 +159,22 @@ export const nouns: VocabularyCard[] = [
       'Millions of people live in poverty.',
       'The charity works to reduce poverty.',
       'He grew up in poverty but eventually became successful.',
+    ],
+    collocations: [
+      'live in poverty',
+      'extreme poverty',
+      'reduce poverty',
+      'poverty line',
+    ],
+    synonyms: ['destitution', 'deprivation'],
+    antonyms: ['wealth', 'prosperity'],
+    wordFamily: {
+      adjective: ['poor'],
+      verb: ['impoverish'],
+    },
+    register: ['written', 'academic'],
+    commonMistakes: [
+      'Say "live in poverty", not "live at poverty".',
     ],
     context: 'Many families struggle to survive because of extreme poverty.',
     category: 'Nouns',

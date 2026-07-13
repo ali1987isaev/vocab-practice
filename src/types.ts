@@ -6,10 +6,30 @@ export interface VocabularyCard {
   term: string
   translation: string
   definition: string
+  pronunciation?: string
   examples: string[]
+  collocations?: string[]
+  synonyms?: string[]
+  antonyms?: string[]
+  wordFamily?: {
+    noun?: string[]
+    verb?: string[]
+    adjective?: string[]
+    adverb?: string[]
+  }
+  register?: (
+    | 'spoken'
+    | 'written'
+    | 'formal'
+    | 'informal'
+    | 'academic'
+    | 'business'
+    | 'slang'
+  )[]
+  commonMistakes?: string[]
   context?: string
   notes?: string
-  pronunciation?: string
+  level?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2'
   category?: string
   tags?: string[]
   status: CardStatus
