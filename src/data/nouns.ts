@@ -1,5 +1,5 @@
-import type { VocabularyCard } from '../types'
-import { createCard } from './helpers'
+import type { VocabularyCard } from '../types';
+import { createCard } from './helpers';
 
 export const nouns: VocabularyCard[] = [
   createCard({
@@ -13,7 +13,8 @@ export const nouns: VocabularyCard[] = [
       'Hardship can make people stronger.',
       'The family survived years of hardship.',
     ],
-    context: 'Many successful people experienced hardship before achieving success.',
+    context:
+      'Many successful people experienced hardship before achieving success.',
     category: 'Nouns',
     tags: ['life', 'difficulties'],
     reviewCount: 0,
@@ -21,4 +22,114 @@ export const nouns: VocabularyCard[] = [
     incorrectCount: 0,
     intervalDays: 0,
   }),
-]
+  createCard({
+    id: 'effort',
+    term: 'effort',
+    translation: 'усилие; старание',
+    definition: 'Physical or mental energy used to do something.',
+    pronunciation: '/ˈefət/',
+    examples: [
+      'Learning a language takes time and effort.',
+      'She made a great effort to improve.',
+      'Your effort will eventually bring results.',
+    ],
+    context:
+      'Even a small daily effort can lead to significant progress over time.',
+    category: 'Nouns',
+    tags: ['work', 'learning', 'progress'],
+    status: 'new',
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
+
+  createCard({
+    id: 'concern',
+    term: 'concern',
+    translation: 'беспокойство; озабоченность; вопрос',
+    definition: 'A feeling of worry about something, or an important matter.',
+    pronunciation: '/kənˈsɜːn/',
+    examples: [
+      'There is growing concern about the problem.',
+      'My main concern is the lack of time.',
+      'She expressed concern about his health.',
+    ],
+    context:
+      'One of my main concerns was whether the update would affect the live website.',
+    category: 'Nouns',
+    tags: ['feelings', 'work', 'problems'],
+    status: 'new',
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
+
+  createCard({
+    id: 'struggle',
+    term: 'struggle',
+    translation: 'борьба; трудность',
+    definition:
+      'A difficult effort to achieve something or deal with a problem.',
+    pronunciation: '/ˈstrʌɡl/',
+    examples: [
+      'Learning to speak confidently can be a struggle.',
+      'Their struggle continued for many years.',
+      'He spoke openly about his personal struggles.',
+    ],
+    context:
+      'The struggle became easier once I started practising consistently.',
+    category: 'Nouns',
+    tags: ['difficulties', 'life', 'learning'],
+    status: 'new',
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
+
+  createCard({
+    id: 'worldview',
+    term: 'worldview',
+    translation: 'мировоззрение',
+    definition: 'A set of beliefs and ideas about life and the world.',
+    pronunciation: '/ˈwɜːldvjuː/',
+    examples: [
+      'Religion has a strong influence on his worldview.',
+      'Travel can change your worldview.',
+      'Their worldviews are very different.',
+    ],
+    context:
+      'A person’s worldview influences how they understand success, hardship, and responsibility.',
+    category: 'Nouns',
+    tags: ['beliefs', 'ideas', 'society'],
+    status: 'new',
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
+
+  createCard({
+    id: 'slave',
+    term: 'slave',
+    translation: 'раб',
+    definition: 'A person who is owned by another person and forced to work.',
+    pronunciation: '/sleɪv/',
+    examples: [
+      'Slaves were denied freedom and basic rights.',
+      'The story is about a man who was born a slave.',
+      'Many societies depended on slave labour.',
+    ],
+    context:
+      'A slave had no legal freedom and was controlled by another person.',
+    category: 'Nouns',
+    tags: ['history', 'society'],
+    status: 'new',
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
+];

@@ -1,5 +1,5 @@
-import type { VocabularyCard } from '../types'
-import { createCard } from './helpers'
+import type { VocabularyCard } from '../types';
+import { createCard } from './helpers';
 
 export const verbs: VocabularyCard[] = [
   createCard({
@@ -40,4 +40,25 @@ export const verbs: VocabularyCard[] = [
     incorrectCount: 0,
     intervalDays: 0,
   }),
-]
+  createCard({
+    id: 'survive',
+    term: 'survive',
+    translation: 'выжить; пережить',
+    definition:
+      'To continue living or existing after danger, hardship, or difficulty.',
+    pronunciation: '/səˈvaɪv/',
+    examples: [
+      'They survived the accident.',
+      'The family struggled to survive.',
+      'Some traditions have survived for centuries.',
+    ],
+    context: 'They managed to survive despite years of hardship.',
+    category: 'Verbs',
+    tags: ['life', 'hardship', 'danger'],
+    status: 'new',
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
+];
