@@ -25,6 +25,7 @@ export interface VocabularyCard {
     | 'academic'
     | 'business'
     | 'slang'
+    | 'historical'
   )[]
   commonMistakes?: string[]
   context?: string
