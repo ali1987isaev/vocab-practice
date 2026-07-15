@@ -40,9 +40,7 @@ export const nouns: VocabularyCard[] = [
       'joint effort',
     ],
     register: ['spoken', 'written'],
-    commonMistakes: [
-      'Say "make an effort", not "do an effort".',
-    ],
+    commonMistakes: ['Say "make an effort", not "do an effort".'],
     context:
       'Even a small daily effort can lead to significant progress over time.',
     category: 'Nouns',
@@ -173,12 +171,49 @@ export const nouns: VocabularyCard[] = [
       verb: ['impoverish'],
     },
     register: ['written', 'academic'],
-    commonMistakes: [
-      'Say "live in poverty", not "live at poverty".',
-    ],
+    commonMistakes: ['Say "live in poverty", not "live at poverty".'],
     context: 'Many families struggle to survive because of extreme poverty.',
     category: 'Nouns',
     tags: ['life', 'society', 'economics'],
+    status: 'new',
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
+  createCard({
+    id: 'attitude',
+    term: 'attitude',
+    translation: 'отношение; настрой',
+    definition:
+      'The way someone thinks or feels about a person, situation, or idea, often shown through their behavior.',
+    pronunciation: '/ˈætɪtjuːd/',
+    examples: [
+      'She has a positive attitude towards learning.',
+      'His attitude changed after the meeting.',
+      'A good attitude can make a big difference.',
+    ],
+    collocations: [
+      'positive attitude',
+      'negative attitude',
+      'attitude towards something',
+      'change your attitude',
+      'have a good attitude',
+    ],
+    synonyms: ['mindset', 'outlook', 'approach'],
+    antonyms: ['apathy', 'indifference'],
+    wordFamily: {
+      adjective: ['attitudinal'],
+      noun: ['attitude'],
+    },
+    register: ['spoken', 'written'],
+    commonMistakes: [
+      'Use "attitude towards", not "attitude to" in most international English contexts.',
+    ],
+    context:
+      'Having the right attitude is often more important than having perfect skills.',
+    category: 'Nouns',
+    tags: ['personality', 'communication', 'mindset'],
     status: 'new',
     reviewCount: 0,
     correctCount: 0,

@@ -61,4 +61,43 @@ export const verbs: VocabularyCard[] = [
     incorrectCount: 0,
     intervalDays: 0,
   }),
+  createCard({
+    id: 'anticipate',
+    term: 'anticipate',
+    translation: 'ожидать; предвидеть; предвосхищать',
+    definition:
+      'To expect that something will happen or to prepare for it before it happens.',
+    pronunciation: '/ænˈtɪsɪpeɪt/',
+    examples: [
+      'We anticipate heavy traffic during the holidays.',
+      'The company anticipated customer demand and increased production.',
+      'I didn’t anticipate so many people attending the event.',
+    ],
+    collocations: [
+      'anticipate problems',
+      'anticipate changes',
+      'anticipate demand',
+      'anticipate the future',
+      'anticipate needs',
+    ],
+    synonyms: ['expect', 'foresee', 'predict'],
+    antonyms: ['ignore', 'overlook'],
+    wordFamily: {
+      noun: ['anticipation'],
+      adjective: ['anticipatory'],
+    },
+    register: ['spoken', 'written', 'business'],
+    commonMistakes: [
+      'Do not confuse "anticipate" with "expect". "Anticipate" often means expecting something and preparing for it.',
+    ],
+    context:
+      'Successful companies anticipate market changes instead of simply reacting to them.',
+    category: 'Verbs',
+    tags: ['business', 'planning', 'thinking', 'future'],
+    status: 'new',
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
 ];

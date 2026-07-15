@@ -1,5 +1,5 @@
-import type { VocabularyCard } from '../types'
-import { createCard } from './helpers'
+import type { VocabularyCard } from '../types';
+import { createCard } from './helpers';
 
 export const adjectives: VocabularyCard[] = [
   createCard({
@@ -59,4 +59,42 @@ export const adjectives: VocabularyCard[] = [
     incorrectCount: 0,
     intervalDays: 0,
   }),
-]
+  createCard({
+    id: 'unpredictable',
+    term: 'unpredictable',
+    translation: 'непредсказуемый',
+    definition: 'Impossible or difficult to know, guess, or expect in advance.',
+    pronunciation: '/ˌʌnprɪˈdɪktəbl/',
+    examples: [
+      'The weather in Ireland is unpredictable.',
+      'His behavior can be very unpredictable.',
+      'Life is often unpredictable.',
+    ],
+    collocations: [
+      'unpredictable weather',
+      'unpredictable behavior',
+      'highly unpredictable',
+      'completely unpredictable',
+      'remain unpredictable',
+    ],
+    synonyms: ['uncertain', 'erratic', 'unexpected'],
+    antonyms: ['predictable', 'consistent', 'reliable'],
+    wordFamily: {
+      noun: ['unpredictability'],
+      adverb: ['unpredictably'],
+    },
+    register: ['spoken', 'written'],
+    commonMistakes: [
+      'Do not confuse "unpredictable" with "unexpected". Something unexpected happens once; something unpredictable is difficult to predict in general.',
+    ],
+    context:
+      'The stock market is highly unpredictable, so nobody can guarantee future results.',
+    category: 'Adjectives',
+    tags: ['personality', 'weather', 'life', 'business'],
+    status: 'new',
+    reviewCount: 0,
+    correctCount: 0,
+    incorrectCount: 0,
+    intervalDays: 0,
+  }),
+];
