@@ -8,6 +8,7 @@ export const verbs: VocabularyCard[] = [
     translation: 'предполагать; полагать',
     definition: 'To think that something is probably true.',
     pronunciation: '/səˈpəʊz/',
+    level: 'B1',
     examples: [
       'I suppose you are right.',
       'What do you suppose happened?',
@@ -27,6 +28,7 @@ export const verbs: VocabularyCard[] = [
     translation: 'бросить; прекратить; уйти',
     definition: 'To stop doing something or leave a job.',
     pronunciation: '/kwɪt/',
+    level: 'B1',
     examples: [
       'He quit his job.',
       'I want to quit smoking.',
@@ -47,6 +49,7 @@ export const verbs: VocabularyCard[] = [
     definition:
       'To continue living or existing after danger, hardship, or difficulty.',
     pronunciation: '/səˈvaɪv/',
+    level: 'B1',
     examples: [
       'They survived the accident.',
       'The family struggled to survive.',
@@ -68,6 +71,7 @@ export const verbs: VocabularyCard[] = [
     definition:
       'To expect that something will happen or to prepare for it before it happens.',
     pronunciation: '/ænˈtɪsɪpeɪt/',
+    level: 'B2',
     examples: [
       'We anticipate heavy traffic during the holidays.',
       'The company anticipated customer demand and increased production.',

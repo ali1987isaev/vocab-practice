@@ -8,6 +8,7 @@ export const phrasalVerbs: VocabularyCard[] = [
     translation: 'разобраться; понять; выяснить',
     definition: 'To understand something or find the answer.',
     pronunciation: '/ˈfɪɡər aʊt/',
+    level: 'B1',
     examples: [
       'I finally figured out how to use this app.',
       "Can you figure out what's wrong?",
@@ -27,6 +28,7 @@ export const phrasalVerbs: VocabularyCard[] = [
     translation: 'терпеть; мириться с чем-либо',
     definition: 'To tolerate something unpleasant.',
     pronunciation: '/pʊt ʌp wɪð/',
+    level: 'B2',
     examples: [
       "I can't put up with this noise anymore.",
       'She puts up with a lot at work.',
@@ -46,6 +48,7 @@ export const phrasalVerbs: VocabularyCard[] = [
     translation: 'перенести на более позднее время; отложить',
     definition: 'To postpone or delay something.',
     pronunciation: '/pʊʃ bæk/',
+    level: 'B2',
     examples: [
       'We pushed the meeting back until Friday.',
       'Can we push dinner back an hour?',
@@ -65,6 +68,7 @@ export const phrasalVerbs: VocabularyCard[] = [
     translation: 'согласиться; поддержать предложение или план',
     definition: "To agree with or support someone else's idea.",
     pronunciation: '/ɡəʊ əˈlɒŋ wɪð/',
+    level: 'B2',
     examples: [
       'I decided to go along with the plan.',
       'She went along with his suggestion.',
@@ -84,6 +88,7 @@ export const phrasalVerbs: VocabularyCard[] = [
     translation: 'отказаться; отклонить',
     definition: 'To refuse or reject an offer, request, or invitation.',
     pronunciation: '/tɜːn daʊn/',
+    level: 'B1',
     examples: [
       'He turned down the job offer.',
       'She turned down my invitation.',

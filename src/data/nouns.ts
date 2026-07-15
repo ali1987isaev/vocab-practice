@@ -8,6 +8,7 @@ export const nouns: VocabularyCard[] = [
     translation: 'трудность; лишения',
     definition: 'Difficult conditions that make life hard.',
     pronunciation: '/ˈhɑːdʃɪp/',
+    level: 'B2',
     examples: [
       'They went through many hardships.',
       'Hardship can make people stronger.',
@@ -28,6 +29,7 @@ export const nouns: VocabularyCard[] = [
     translation: 'усилие; старание',
     definition: 'Physical or mental energy used to do something.',
     pronunciation: '/ˈefət/',
+    level: 'B1',
     examples: [
       'Learning a language takes time and effort.',
       'She made a great effort to improve.',
@@ -58,6 +60,7 @@ export const nouns: VocabularyCard[] = [
     translation: 'беспокойство; озабоченность; вопрос',
     definition: 'A feeling of worry about something, or an important matter.',
     pronunciation: '/kənˈsɜːn/',
+    level: 'B2',
     examples: [
       'There is growing concern about the problem.',
       'My main concern is the lack of time.',
@@ -87,6 +90,7 @@ export const nouns: VocabularyCard[] = [
     definition:
       'A difficult effort to achieve something or deal with a problem.',
     pronunciation: '/ˈstrʌɡl/',
+    level: 'B2',
     examples: [
       'Learning to speak confidently can be a struggle.',
       'Their struggle continued for many years.',
@@ -109,6 +113,7 @@ export const nouns: VocabularyCard[] = [
     translation: 'мировоззрение',
     definition: 'A set of beliefs and ideas about life and the world.',
     pronunciation: '/ˈwɜːldvjuː/',
+    level: 'C1',
     examples: [
       'Religion has a strong influence on his worldview.',
       'Travel can change your worldview.',
@@ -131,6 +136,7 @@ export const nouns: VocabularyCard[] = [
     translation: 'раб',
     definition: 'A person who is owned by another person and forced to work.',
     pronunciation: '/sleɪv/',
+    level: 'B1',
     examples: [
       'Slaves were denied freedom and basic rights.',
       'The story is about a man who was born a slave.',
@@ -153,6 +159,7 @@ export const nouns: VocabularyCard[] = [
     definition:
       'The state of being extremely poor or having very little money.',
     pronunciation: '/ˈpɒvəti/',
+    level: 'B2',
     examples: [
       'Millions of people live in poverty.',
       'The charity works to reduce poverty.',
@@ -188,6 +195,7 @@ export const nouns: VocabularyCard[] = [
     definition:
       'The way someone thinks or feels about a person, situation, or idea, often shown through their behavior.',
     pronunciation: '/ˈætɪtjuːd/',
+    level: 'B2',
     examples: [
       'She has a positive attitude towards learning.',
       'His attitude changed after the meeting.',

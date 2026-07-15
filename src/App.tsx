@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
+import { CardDetails } from './components/CardDetails'
+import { LevelBadge } from './components/LevelBadge'
 import { applyReview, isDue } from './review'
 import {
   DEFAULT_SPEECH_SETTINGS,
@@ -9,7 +11,6 @@ import {
 } from './speech'
 import { loadCards, resetProgress, saveProgress } from './storage'
 import type { ReviewRating, VocabularyCard } from './types'
-import { CardDetails } from './components/CardDetails'
 
 type View = 'today' | 'practice' | 'words' | 'settings'
 
@@ -46,6 +47,7 @@ export default function App() {
   const [sessionIndex, setSessionIndex] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [query, setQuery] = useState('')
+  const [selectedWordId, setSelectedWordId] = useState<string | null>(null)
   const [speechSettings, setSpeechSettings] = useState(loadSpeechSettings)
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
   const speechSupported = isSpeechSupported()
@@ -198,7 +200,10 @@ export default function App() {
                 </div>
 
                 <article className={`practice-card ${revealed ? 'is-revealed' : ''}`} onClick={() => setRevealed(true)}>
-                  <p className="eyebrow">{currentCard.category ?? 'VOCABULARY'}</p>
+                  <div className="card-meta">
+                    <LevelBadge level={currentCard.level} />
+                    <p className="eyebrow">{currentCard.category ?? 'VOCABULARY'}</p>
+                  </div>
                   <div className="word-heading">
                     <h2>{currentCard.term}</h2>
                     <IconButton label="Listen to pronunciation" onClick={() => speakText(currentCard.term)}>🔊</IconButton>
@@ -245,18 +250,42 @@ export default function App() {
             </div>
 
             <div className="word-list">
-              {filteredCards.map((card) => (
-                <article className="word-row" key={card.id}>
-                  <div className="word-main">
-                    <span>
-                      <strong>{card.term}</strong>
-                      <small>{card.translation}</small>
-                    </span>
-                    <span className={`status-pill status-${card.status}`}>{card.status}</span>
-                  </div>
-                  <IconButton label={`Listen to ${card.term}`} onClick={() => speakText(card.term)}>🔊</IconButton>
-                </article>
-              ))}
+              {filteredCards.map((card) => {
+                const isSelected = selectedWordId === card.id
+
+                return (
+                  <article className={`word-row ${isSelected ? 'is-open' : ''}`} key={card.id}>
+                    <div className="word-row-summary">
+                      <button
+                        className="word-main"
+                        type="button"
+                        aria-expanded={isSelected}
+                        onClick={() => setSelectedWordId(isSelected ? null : card.id)}
+                      >
+                        <span>
+                          <strong>{card.term}</strong>
+                          <small>{card.translation}</small>
+                        </span>
+                        <span className="word-badges">
+                          <LevelBadge level={card.level} />
+                          <span className={`status-pill status-${card.status}`}>{card.status}</span>
+                        </span>
+                      </button>
+                      <IconButton label={`Listen to ${card.term}`} onClick={() => speakText(card.term)}>🔊</IconButton>
+                    </div>
+                    {isSelected && (
+                      <div className="word-details-panel">
+                        <div className="card-meta">
+                          <LevelBadge level={card.level} />
+                          <span className="word-category">{card.category ?? 'Vocabulary'}</span>
+                        </div>
+                        {card.pronunciation && <p className="pronunciation">{card.pronunciation}</p>}
+                        <CardDetails card={card} onSpeak={speakText} />
+                      </div>
+                    )}
+                  </article>
+                )
+              })}
             </div>
           </section>
         )}

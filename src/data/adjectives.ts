@@ -8,6 +8,7 @@ export const adjectives: VocabularyCard[] = [
     translation: 'спокойный',
     definition: 'Not nervous, angry, or excited.',
     pronunciation: '/kɑːm/',
+    level: 'A2',
     examples: [
       'She stayed calm during the interview.',
       'Try to remain calm.',
@@ -27,6 +28,7 @@ export const adjectives: VocabularyCard[] = [
     translation: 'относящийся к делу; релевантный',
     definition: 'Closely connected with the subject being discussed.',
     pronunciation: '/ˈreləvənt/',
+    level: 'B2',
     examples: [
       'Please provide relevant information.',
       'His experience is relevant to the job.',
@@ -46,6 +48,7 @@ export const adjectives: VocabularyCard[] = [
     translation: 'связанный; относящийся',
     definition: 'Connected with or linked to something else.',
     pronunciation: '/rɪˈleɪtɪd/',
+    level: 'B1',
     examples: [
       'The two issues are closely related.',
       'This article is related to programming.',
@@ -65,6 +68,7 @@ export const adjectives: VocabularyCard[] = [
     translation: 'непредсказуемый',
     definition: 'Impossible or difficult to know, guess, or expect in advance.',
     pronunciation: '/ˌʌnprɪˈdɪktəbl/',
+    level: 'B2',
     examples: [
       'The weather in Ireland is unpredictable.',
       'His behavior can be very unpredictable.',
