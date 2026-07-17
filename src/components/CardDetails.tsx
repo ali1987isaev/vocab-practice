@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import type { VocabularyCard } from '../types'
+import { getYouglishUrl } from '../youglish'
 
 interface CardSectionProps {
   title: string
@@ -138,6 +139,19 @@ export function CardDetails({ card, onSpeak }: CardDetailsProps) {
           <p className="card-notes">{card.notes}</p>
         </CardSection>
       )}
+
+      <div className="youglish-action">
+        <a
+          href={getYouglishUrl(card)}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Hear "${card.term}" on YouGlish`}
+          onClick={(event) => event.stopPropagation()}
+        >
+          <span>Hear it on YouGlish</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
     </div>
   )
 }

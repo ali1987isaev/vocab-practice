@@ -7,6 +7,7 @@ export interface VocabularyCard {
   translation: string
   definition: string
   pronunciation?: string
+  youglishQuery?: string
   examples: string[]
   collocations?: string[]
   synonyms?: string[]
