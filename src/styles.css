@@ -55,10 +55,18 @@ button:focus-visible { outline: 3px solid rgba(46,154,146,.35); outline-offset: 
 .status-mastered { background: #4d9d62; }
 .status-paused { background: #9ca7a6; }
 
-.context-card { padding: 23px; border-radius: 26px; color: white; background: #162326; position: relative; }
+.context-card, .grammar-tip-card { padding: 23px; border-radius: 26px; color: white; background: #162326; position: relative; }
 .context-card p:not(.eyebrow) { font-size: 1.18rem; line-height: 1.55; font-weight: 700; margin: 13px 48px 0 0; }
 .context-card mark { color: #66c9c0; background: transparent; }
 .context-card .icon-button { position: absolute; right: 18px; bottom: 18px; color: white; border-color: #445254; background: #263639; }
+.grammar-tip-card h2 { margin: 8px 0 7px; color: white; font-size: 1.65rem; letter-spacing: -.035em; }
+.grammar-tip-definition { margin: 0; color: #d9e2e1; line-height: 1.5; }
+.grammar-tip-examples { margin-top: 18px; }
+.grammar-tip-examples > span { color: #86d6cf; font-size: .68rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+.grammar-tip-examples ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 9px 0 0; padding: 0; list-style: none; }
+.grammar-tip-examples li { padding: 7px 10px; border: 1px solid #445254; border-radius: 10px; background: #263639; color: white; font-size: .86rem; line-height: 1.3; }
+.grammar-tip-examples li.is-key-term { color: #66c9c0; font-weight: 750; }
+.grammar-tip-examples mark { color: #66c9c0; background: transparent; font-weight: 800; }
 
 .practice-screen { min-height: calc(100vh - 95px); }
 .progress-row { display: flex; align-items: center; gap: 12px; color: var(--muted); font-weight: 700; }

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { CardDetails } from './components/CardDetails'
+import { GrammarTipCard } from './components/GrammarTipCard'
 import { LevelBadge } from './components/LevelBadge'
+import { getDailyGrammarTip } from './data/grammar-tips'
 import { applyReview, isDue } from './review'
 import {
   DEFAULT_SPEECH_SETTINGS,
@@ -125,6 +127,7 @@ export default function App() {
   const initialCards = useRef(cards)
   const initialSpeechSettings = useRef(speechSettings)
   const speechSupported = isSpeechSupported()
+  const grammarTip = getDailyGrammarTip()
 
   useEffect(() => {
     if (cards !== initialCards.current) saveProgress(cards)
@@ -270,13 +273,7 @@ export default function App() {
               ))}
             </div>
 
-            <article className="context-card">
-              <p className="eyebrow light">CONTEXT PRACTICE</p>
-              <p>
-                Yesterday I had to <mark>push back</mark> a meeting because I was trying to <mark>figure out</mark> why my computer wasn’t working. I couldn’t <mark>put up with</mark> it anymore, so I <mark>went along with</mark> another idea.
-              </p>
-              <IconButton label="Listen to the context" onClick={() => speakText("Yesterday I had to push back a meeting because I was trying to figure out why my computer wasn't working. I couldn't put up with it anymore, so I went along with another idea.")}>🔊</IconButton>
-            </article>
+            <GrammarTipCard tip={grammarTip} />
           </section>
         )}
 
