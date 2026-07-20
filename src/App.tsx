@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CardDetails } from './components/CardDetails'
 import { LevelBadge } from './components/LevelBadge'
 import { applyReview, isDue } from './review'
@@ -13,6 +13,7 @@ import { loadCards, resetProgress, saveProgress } from './storage'
 import type { ReviewRating, VocabularyCard } from './types'
 
 type View = 'today' | 'practice' | 'words' | 'settings'
+type WordsViewMode = 'all' | 'english' | 'russian'
 
 const LANGUAGE_OPTIONS = [
   { value: 'en-GB', label: 'English (UK)' },
@@ -20,6 +21,12 @@ const LANGUAGE_OPTIONS = [
   { value: 'en-IE', label: 'English (Ireland)' },
   { value: 'en-AU', label: 'English (Australia)' },
   { value: 'en-CA', label: 'English (Canada)' },
+]
+
+const WORDS_VIEW_OPTIONS: { value: WordsViewMode; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'english', label: 'English' },
+  { value: 'russian', label: 'Russian' },
 ]
 
 function getVoiceLabel(voice: SpeechSynthesisVoice): string {
@@ -40,6 +47,70 @@ function IconButton({ label, children, onClick }: { label: string; children: Rea
   )
 }
 
+interface WordListCardProps {
+  card: VocabularyCard
+  mode: WordsViewMode
+  isSelected: boolean
+  onToggle: () => void
+  onSpeak: (text: string) => void
+}
+
+function WordListCard({
+  card,
+  mode,
+  isSelected,
+  onToggle,
+  onSpeak,
+}: WordListCardProps) {
+  if (mode !== 'all') {
+    return (
+      <article className="word-row word-row-compact">
+        <div className="word-row-summary">
+          <div className="compact-word">
+            <strong>{mode === 'english' ? card.term : card.translation}</strong>
+          </div>
+          {mode === 'english' && (
+            <IconButton label={`Listen to ${card.term}`} onClick={() => onSpeak(card.term)}>🔊</IconButton>
+          )}
+        </div>
+      </article>
+    )
+  }
+
+  return (
+    <article className={`word-row ${isSelected ? 'is-open' : ''}`}>
+      <div className="word-row-summary">
+        <button
+          className="word-main"
+          type="button"
+          aria-expanded={isSelected}
+          onClick={onToggle}
+        >
+          <span>
+            <strong>{card.term}</strong>
+            <small>{card.translation}</small>
+          </span>
+          <span className="word-badges">
+            <LevelBadge level={card.level} />
+            <span className={`status-pill status-${card.status}`}>{card.status}</span>
+          </span>
+        </button>
+        <IconButton label={`Listen to ${card.term}`} onClick={() => onSpeak(card.term)}>🔊</IconButton>
+      </div>
+      {isSelected && (
+        <div className="word-details-panel">
+          <div className="card-meta">
+            <LevelBadge level={card.level} />
+            <span className="word-category">{card.category ?? 'Vocabulary'}</span>
+          </div>
+          {card.pronunciation && <p className="pronunciation">{card.pronunciation}</p>}
+          <CardDetails card={card} onSpeak={onSpeak} />
+        </div>
+      )}
+    </article>
+  )
+}
+
 export default function App() {
   const [cards, setCards] = useState<VocabularyCard[]>(loadCards)
   const [view, setView] = useState<View>('today')
@@ -47,13 +118,23 @@ export default function App() {
   const [sessionIndex, setSessionIndex] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [query, setQuery] = useState('')
+  const [wordsViewMode, setWordsViewMode] = useState<WordsViewMode>('all')
   const [selectedWordId, setSelectedWordId] = useState<string | null>(null)
   const [speechSettings, setSpeechSettings] = useState(loadSpeechSettings)
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
+  const initialCards = useRef(cards)
+  const initialSpeechSettings = useRef(speechSettings)
   const speechSupported = isSpeechSupported()
 
-  useEffect(() => saveProgress(cards), [cards])
-  useEffect(() => saveSpeechSettings(speechSettings), [speechSettings])
+  useEffect(() => {
+    if (cards !== initialCards.current) saveProgress(cards)
+  }, [cards])
+
+  useEffect(() => {
+    if (speechSettings !== initialSpeechSettings.current) {
+      saveSpeechSettings(speechSettings)
+    }
+  }, [speechSettings])
 
   useEffect(() => {
     if (!speechSupported) return
@@ -70,8 +151,26 @@ export default function App() {
     return () => synthesis.removeEventListener('voiceschanged', loadVoices)
   }, [speechSupported])
 
-  const dueCards = useMemo(() => cards.filter(isDue), [cards])
-  const currentCard = cards.find((card) => card.id === sessionIds[sessionIndex])
+  const cardSummary = useMemo(() => {
+    const dueCards: VocabularyCard[] = []
+    let newCount = 0
+    let masteredCount = 0
+    let inReviewCount = 0
+
+    for (const card of cards) {
+      if (isDue(card)) dueCards.push(card)
+      if (card.status === 'new') newCount += 1
+      else inReviewCount += 1
+      if (card.status === 'mastered') masteredCount += 1
+    }
+
+    return { dueCards, newCount, masteredCount, inReviewCount }
+  }, [cards])
+  const { dueCards, newCount, masteredCount, inReviewCount } = cardSummary
+  const currentCard = useMemo(
+    () => cards.find((card) => card.id === sessionIds[sessionIndex]),
+    [cards, sessionIds, sessionIndex],
+  )
   const progress = sessionIds.length ? Math.round((sessionIndex / sessionIds.length) * 100) : 0
 
   const filteredCards = useMemo(() => {
@@ -144,7 +243,7 @@ export default function App() {
               <div>
                 <p className="eyebrow light">DAILY SESSION</p>
                 <h2>Keep your active vocabulary moving.</h2>
-                <p>{cards.filter((card) => card.status === 'new').length} new · {cards.filter((card) => card.status !== 'new').length} in review</p>
+                <p>{newCount} new · {inReviewCount} in review</p>
               </div>
               <button className="primary-button light-button" type="button" onClick={startPractice} disabled={!cards.length}>
                 Start practice →
@@ -239,53 +338,54 @@ export default function App() {
         {view === 'words' && (
           <section className="stack">
             <label className="search-box">
-              <span>⌕</span>
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search your learning words" />
+              <span className="search-icon" aria-hidden="true">⌕</span>
+              <input
+                id="vocabulary-search"
+                name="vocabulary-search"
+                type="search"
+                aria-label="Search vocabulary"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search your learning words"
+              />
             </label>
+
+            <div className="view-mode-selector" role="group" aria-label="Vocabulary card view">
+              {WORDS_VIEW_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  className={wordsViewMode === option.value ? 'active' : ''}
+                  type="button"
+                  aria-pressed={wordsViewMode === option.value}
+                  onClick={() => {
+                    setWordsViewMode(option.value)
+                    if (option.value !== 'all') setSelectedWordId(null)
+                  }}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
 
             <div className="stats-row">
               <div><strong>{cards.length}</strong><span>Total</span></div>
-              <div><strong>{cards.filter((card) => card.status === 'new').length}</strong><span>New</span></div>
-              <div><strong>{cards.filter((card) => card.status === 'mastered').length}</strong><span>Mastered</span></div>
+              <div><strong>{newCount}</strong><span>New</span></div>
+              <div><strong>{masteredCount}</strong><span>Mastered</span></div>
             </div>
 
             <div className="word-list">
-              {filteredCards.map((card) => {
-                const isSelected = selectedWordId === card.id
-
-                return (
-                  <article className={`word-row ${isSelected ? 'is-open' : ''}`} key={card.id}>
-                    <div className="word-row-summary">
-                      <button
-                        className="word-main"
-                        type="button"
-                        aria-expanded={isSelected}
-                        onClick={() => setSelectedWordId(isSelected ? null : card.id)}
-                      >
-                        <span>
-                          <strong>{card.term}</strong>
-                          <small>{card.translation}</small>
-                        </span>
-                        <span className="word-badges">
-                          <LevelBadge level={card.level} />
-                          <span className={`status-pill status-${card.status}`}>{card.status}</span>
-                        </span>
-                      </button>
-                      <IconButton label={`Listen to ${card.term}`} onClick={() => speakText(card.term)}>🔊</IconButton>
-                    </div>
-                    {isSelected && (
-                      <div className="word-details-panel">
-                        <div className="card-meta">
-                          <LevelBadge level={card.level} />
-                          <span className="word-category">{card.category ?? 'Vocabulary'}</span>
-                        </div>
-                        {card.pronunciation && <p className="pronunciation">{card.pronunciation}</p>}
-                        <CardDetails card={card} onSpeak={speakText} />
-                      </div>
-                    )}
-                  </article>
-                )
-              })}
+              {filteredCards.map((card) => (
+                <WordListCard
+                  key={card.id}
+                  card={card}
+                  mode={wordsViewMode}
+                  isSelected={wordsViewMode === 'all' && selectedWordId === card.id}
+                  onToggle={() => setSelectedWordId(
+                    selectedWordId === card.id ? null : card.id,
+                  )}
+                  onSpeak={speakText}
+                />
+              ))}
             </div>
           </section>
         )}
@@ -416,10 +516,10 @@ export default function App() {
 
       {view !== 'practice' && (
         <nav className="bottom-nav" aria-label="Main navigation">
-          <button className={view === 'today' ? 'active' : ''} type="button" onClick={() => setView('today')}><span>⌂</span><small>Today</small></button>
-          <button type="button" onClick={startPractice}><span>▶</span><small>Practice</small></button>
-          <button className={view === 'words' ? 'active' : ''} type="button" onClick={() => setView('words')}><span>▤</span><small>Words</small></button>
-          <button className={view === 'settings' ? 'active' : ''} type="button" onClick={() => setView('settings')}><span>⚙</span><small>Settings</small></button>
+          <button className={view === 'today' ? 'active' : ''} type="button" aria-current={view === 'today' ? 'page' : undefined} onClick={() => setView('today')}><span aria-hidden="true">⌂</span><small>Today</small></button>
+          <button type="button" onClick={startPractice}><span aria-hidden="true">▶</span><small>Practice</small></button>
+          <button className={view === 'words' ? 'active' : ''} type="button" aria-current={view === 'words' ? 'page' : undefined} onClick={() => setView('words')}><span aria-hidden="true">▤</span><small>Words</small></button>
+          <button className={view === 'settings' ? 'active' : ''} type="button" aria-current={view === 'settings' ? 'page' : undefined} onClick={() => setView('settings')}><span aria-hidden="true">⚙</span><small>Settings</small></button>
         </nav>
       )}
 
