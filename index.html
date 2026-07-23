@@ -7,6 +7,18 @@
     <meta name="description" content="A focused mobile vocabulary practice app." />
     <link rel="icon" href="./icon.svg" type="image/svg+xml" />
     <title>Vocab Practice</title>
+    <script>
+      (() => {
+        try {
+          const theme = localStorage.getItem('vocabulary-theme')
+          document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light'
+          document.documentElement.style.colorScheme = theme === 'dark' ? 'dark' : 'light'
+        } catch {
+          document.documentElement.dataset.theme = 'light'
+          document.documentElement.style.colorScheme = 'light'
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

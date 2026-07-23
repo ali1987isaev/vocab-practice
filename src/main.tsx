@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { registerSW } from 'virtual:pwa-register'
 import App from './App'
 import './styles.css'
+import { applyTheme, loadTheme } from './theme'
 
 const UPDATE_INTERVAL = 60 * 60 * 1000
 const FOREGROUND_CHECK_THROTTLE = 60 * 1000
@@ -10,6 +11,8 @@ const LEGACY_CACHE_NAME = 'vocab-practice-v1'
 let updateInterval: number | undefined
 let registrationTimer: number | undefined
 let lastForegroundCheck = 0
+
+applyTheme(loadTheme())
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

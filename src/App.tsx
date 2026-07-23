@@ -12,6 +12,7 @@ import {
   speak,
 } from './speech'
 import { loadCards, resetProgress, saveProgress } from './storage'
+import { useTheme } from './theme'
 import type { ReviewRating, VocabularyCard } from './types'
 
 type View = 'today' | 'practice' | 'words' | 'settings'
@@ -124,6 +125,7 @@ export default function App() {
   const [selectedWordId, setSelectedWordId] = useState<string | null>(null)
   const [speechSettings, setSpeechSettings] = useState(loadSpeechSettings)
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
+  const { theme, setTheme } = useTheme()
   const initialCards = useRef(cards)
   const initialSpeechSettings = useRef(speechSettings)
   const speechSupported = isSpeechSupported()
@@ -389,6 +391,26 @@ export default function App() {
 
         {view === 'settings' && (
           <section className="stack">
+            <article className="settings-card appearance-card">
+              <div className="setting-row">
+                <div>
+                  <h2 id="dark-mode-label">Dark mode</h2>
+                  <p id="dark-mode-description">Use a darker theme for comfortable viewing at night.</p>
+                </div>
+                <button
+                  className="theme-switch"
+                  type="button"
+                  role="switch"
+                  aria-checked={theme === 'dark'}
+                  aria-labelledby="dark-mode-label"
+                  aria-describedby="dark-mode-description"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                >
+                  <span className="switch-thumb" aria-hidden="true" />
+                </button>
+              </div>
+            </article>
+
             <article className="settings-card">
               <h2>Voice &amp; pronunciation</h2>
               <p>Choose how the browser reads words, examples, and context sentences.</p>
