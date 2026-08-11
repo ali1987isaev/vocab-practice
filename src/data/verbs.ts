@@ -217,12 +217,11 @@ export const verbs: VocabularyCard[] = [
   }),
   createCard({
     id: 'demand',
-    term: 'demand (something from someone)',
+    term: 'demand',
     translation: 'требовать (что-либо от кого-либо)',
     definition:
       'To ask for something firmly and forcefully because you believe you have a right to it.',
     pronunciation: '/dɪˈmɑːnd/',
-    youglishQuery: 'demanding from the government',
     level: 'B2',
     examples: [
       'They are demanding action from the government.',

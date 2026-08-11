@@ -163,7 +163,14 @@ blockquote { margin: 18px 0 0; padding: 16px; border-left: 4px solid var(--accen
 .switch-thumb { display: block; width: 24px; height: 24px; border-radius: 50%; background: white; box-shadow: 0 2px 5px rgba(16,22,25,.25); transition: transform .2s ease; }
 .theme-switch[aria-checked='true'] .switch-thumb { transform: translateX(22px); }
 
-.bottom-nav { position: fixed; z-index: 20; left: 50%; bottom: 0; transform: translateX(-50%); width: min(760px, 100%); display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); border-top: 1px solid #d0d8d5; background: #fafcfb; }
+.youglish-screen[hidden] { display: none; }
+.youglish-widget-card { padding: 24px; border: 1px solid var(--line); border-radius: 24px; background: white; overflow: hidden; }
+.youglish-widget-card h2 { margin: 7px 0 0; font-size: clamp(1.65rem, 7vw, 2.35rem); letter-spacing: -.045em; }
+.youglish-intro { margin: 10px 0 22px; color: var(--muted); line-height: 1.55; }
+.youglish-widget-frame { min-height: 320px; border-radius: 17px; overflow: hidden; background: #f3f6f5; }
+.youglish-widget-frame > a { min-height: 320px; display: grid; place-items: center; padding: 24px; color: var(--accent-dark); font-weight: 800; text-align: center; }
+
+.bottom-nav { position: fixed; z-index: 20; left: 50%; bottom: 0; transform: translateX(-50%); width: min(760px, 100%); display: grid; grid-template-columns: repeat(5, 1fr); padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); border-top: 1px solid #d0d8d5; background: #fafcfb; }
 .bottom-nav button { min-height: 48px; display: grid; place-items: center; gap: 3px; border: 0; background: none; color: #536164; padding: 5px; }
 .bottom-nav button span { font-size: 1.18rem; }
 .bottom-nav button small { font-size: .72rem; font-weight: 750; }
@@ -248,6 +255,15 @@ blockquote { margin: 18px 0 0; padding: 16px; border-left: 4px solid var(--accen
 :root[data-theme='dark'] .settings-card {
   border-color: var(--line);
   background: rgba(24, 33, 36, .96);
+}
+
+:root[data-theme='dark'] .youglish-widget-card {
+  border-color: var(--line);
+  background: rgba(24, 33, 36, .96);
+}
+
+:root[data-theme='dark'] .youglish-widget-frame {
+  background: #121b1d;
 }
 
 :root[data-theme='dark'] .preview-card:hover,

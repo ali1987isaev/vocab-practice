@@ -15,8 +15,10 @@ import { loadCards, resetProgress, saveProgress } from './storage'
 import { useTheme } from './theme'
 import type { ReviewRating, VocabularyCard } from './types'
 
-type View = 'today' | 'practice' | 'words' | 'settings'
+type View = 'today' | 'practice' | 'words' | 'youglish' | 'settings'
 type WordsViewMode = 'all' | 'english' | 'russian'
+
+const YOUGLISH_WIDGET_SCRIPT_ID = 'youglish-widget-script'
 
 const LANGUAGE_OPTIONS = [
   { value: 'en-GB', label: 'English (UK)' },
@@ -156,6 +158,17 @@ export default function App() {
     return () => synthesis.removeEventListener('voiceschanged', loadVoices)
   }, [speechSupported])
 
+  useEffect(() => {
+    if (view !== 'youglish' || document.getElementById(YOUGLISH_WIDGET_SCRIPT_ID)) return
+
+    const script = document.createElement('script')
+    script.id = YOUGLISH_WIDGET_SCRIPT_ID
+    script.src = 'https://youglish.com/public/emb/widget.js'
+    script.async = true
+    script.charset = 'utf-8'
+    document.body.append(script)
+  }, [view])
+
   const cardSummary = useMemo(() => {
     const dueCards: VocabularyCard[] = []
     let newCount = 0
@@ -233,7 +246,7 @@ export default function App() {
       <header className="topbar">
         <div>
           <p className="eyebrow">VOCAB PRACTICE</p>
-          <h1>{view === 'today' ? 'Today' : view === 'practice' ? 'Practice' : view === 'words' ? 'Learning words' : 'Settings'}</h1>
+          <h1>{view === 'today' ? 'Today' : view === 'practice' ? 'Practice' : view === 'words' ? 'Learning words' : view === 'youglish' ? 'YouGlish' : 'Settings'}</h1>
         </div>
       </header>
 
@@ -389,6 +402,31 @@ export default function App() {
           </section>
         )}
 
+        <section className="stack youglish-screen" hidden={view !== 'youglish'}>
+          <article className="youglish-widget-card">
+            <p className="eyebrow">PRONUNCIATION IN CONTEXT</p>
+            <h2>Hear how people really say it.</h2>
+            <p className="youglish-intro">
+              Explore “great power” in real English videos and move between examples
+              using the widget controls.
+            </p>
+            <div className="youglish-widget-frame">
+              <a
+                id="yg-widget-0"
+                className="youglish-widget"
+                data-query="great%20power"
+                data-lang="english"
+                data-components="8415"
+                data-bkg-color="theme_light"
+                rel="nofollow"
+                href="https://youglish.com"
+              >
+                Visit YouGlish.com
+              </a>
+            </div>
+          </article>
+        </section>
+
         {view === 'settings' && (
           <section className="stack">
             <article className="settings-card appearance-card">
@@ -538,6 +576,7 @@ export default function App() {
           <button className={view === 'today' ? 'active' : ''} type="button" aria-current={view === 'today' ? 'page' : undefined} onClick={() => setView('today')}><span aria-hidden="true">⌂</span><small>Today</small></button>
           <button type="button" onClick={startPractice}><span aria-hidden="true">▶</span><small>Practice</small></button>
           <button className={view === 'words' ? 'active' : ''} type="button" aria-current={view === 'words' ? 'page' : undefined} onClick={() => setView('words')}><span aria-hidden="true">▤</span><small>Words</small></button>
+          <button className={view === 'youglish' ? 'active' : ''} type="button" aria-current={view === 'youglish' ? 'page' : undefined} onClick={() => setView('youglish')}><span aria-hidden="true">▷</span><small>YouGlish</small></button>
           <button className={view === 'settings' ? 'active' : ''} type="button" aria-current={view === 'settings' ? 'page' : undefined} onClick={() => setView('settings')}><span aria-hidden="true">⚙</span><small>Settings</small></button>
         </nav>
       )}
